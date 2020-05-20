@@ -7,8 +7,8 @@ use web_sys::WebGlRenderingContext;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen(start)]
-pub fn start() -> Result<(), JsValue> {
+#[wasm_bindgen]
+pub fn triangle() -> Result<(), JsValue> {
     utils::set_panic_hook();
 
     let window = web_sys::window().unwrap();

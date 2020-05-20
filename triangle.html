@@ -10,8 +10,13 @@
 <body>
     <canvas width="512" height="512"></canvas>
     <script type="module">
-        import init from './pkg/webgl_rs.js';
-        init()
+        import init, { triangle } from './pkg/webgl_rs.js';
+        async function run() {
+            await init()
+            await triangle()
+        }
+
+        run()
     </script>
 </body>
 
