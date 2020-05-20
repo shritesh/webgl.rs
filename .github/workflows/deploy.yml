@@ -1,0 +1,26 @@
+name: Deploy to Github Pages
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install wasm-pack
+      run: cargo install wasm-pack
+    - name: Build
+      run: wasm-pack build --target web --release
+    - name: Move things around
+      run: |
+        rm pkg/.gitignore
+        mv pkg www/
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./www
