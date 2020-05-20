@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install wasm-pack
-      run: cargo install wasm-pack
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh 
     - name: Build
       run: wasm-pack build --target web --release
     - name: Move things around
