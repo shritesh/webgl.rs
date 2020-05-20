@@ -15,10 +15,10 @@ jobs:
       run: wasm-pack build --target web --release
     - name: Move things around
       run: |
+        cp -R www/* pkg/
         rm pkg/.gitignore
-        mv pkg www/
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./www
+        publish_dir: ./pkg
