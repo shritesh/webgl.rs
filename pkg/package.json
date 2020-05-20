@@ -1,0 +1,15 @@
+{
+  "name": "webgl-rs",
+  "collaborators": [
+    "Shritesh Bhattarai <shr@ite.sh>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "webgl_rs_bg.wasm",
+    "webgl_rs.js",
+    "webgl_rs.d.ts"
+  ],
+  "module": "webgl_rs.js",
+  "types": "webgl_rs.d.ts",
+  "sideEffects": false
+}
