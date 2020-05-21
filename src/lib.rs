@@ -28,11 +28,16 @@ fn get_context() -> Result<WebGlRenderingContext, JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn triangle() -> Result<(), JsValue> {
-    programs::triangle::run(get_context()?)
+pub fn sierpinski() -> Result<(), JsValue> {
+    programs::sierpinski::run(get_context()?)
 }
 
 #[wasm_bindgen]
 pub fn square() -> Result<(), JsValue> {
     programs::square::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn triangle() -> Result<(), JsValue> {
+    programs::triangle::run(get_context()?)
 }
