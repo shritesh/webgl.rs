@@ -2,17 +2,21 @@
 /* eslint-disable */
 /**
 */
-export function triangle(): void;
+export function sierpinski(): void;
 /**
 */
 export function square(): void;
+/**
+*/
+export function triangle(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly triangle: () => void;
+  readonly sierpinski: () => void;
   readonly square: () => void;
+  readonly triangle: () => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
