@@ -433,14 +433,6 @@ async function init(input) {
         var ret = global.global;
         return addHeapObject(ret);
     });
-    imports.wbg.__wbg_buffer_eb5185aa4a8e9c62 = function(arg0) {
-        var ret = getObject(arg0).buffer;
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_newwithbyteoffsetandlength_a31622ccc380e8b4 = function(arg0, arg1, arg2) {
-        var ret = new Float32Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbg_newwithlength_dd49d6d8ab674613 = function(arg0) {
         var ret = new Float32Array(arg0 >>> 0);
         return addHeapObject(ret);
@@ -469,10 +461,6 @@ async function init(input) {
     };
     imports.wbg.__wbindgen_rethrow = function(arg0) {
         throw takeObject(arg0);
-    };
-    imports.wbg.__wbindgen_memory = function() {
-        var ret = wasm.memory;
-        return addHeapObject(ret);
     };
 
     if (typeof input === 'string' || (typeof Request === 'function' && input instanceof Request) || (typeof URL === 'function' && input instanceof URL)) {
