@@ -1,4 +1,4 @@
-use crate::utils;
+use crate::{linarg::Vec2, utils};
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;
 
@@ -30,19 +30,16 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     let program = utils::link_program(&context, &vert_shader, &frag_shader)?;
     context.use_program(Some(&program));
 
-    let vertices: [f32; 6] = [0.0, 1.0, -1.0, -1.0, 1.0, -1.0];
+    let vertices = [Vec2(0.0, 1.0), Vec2(-1.0, -1.0), Vec2(1.0, -1.0)];
 
     let buffer = context.create_buffer().ok_or("failed to create buffer")?;
     context.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
 
-    unsafe {
-        let vert_array = js_sys::Float32Array::view(&vertices);
-        context.buffer_data_with_array_buffer_view(
-            WebGlRenderingContext::ARRAY_BUFFER,
-            &vert_array,
-            WebGlRenderingContext::STATIC_DRAW,
-        );
-    }
+    context.buffer_data_with_array_buffer_view(
+        WebGlRenderingContext::ARRAY_BUFFER,
+        &Vec2::flatten(&vertices),
+        WebGlRenderingContext::STATIC_DRAW,
+    );
 
     let v_position = match context.get_attrib_location(&program, "vPosition") {
         -1 => Err("unable to get location for vPosition"),
@@ -61,11 +58,7 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
 
     context.clear_color(1.0, 1.0, 1.0, 1.0);
     context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
-    context.draw_arrays(
-        WebGlRenderingContext::TRIANGLES,
-        0,
-        (vertices.len() / 2) as i32,
-    );
+    context.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, vertices.len() as i32);
 
     Ok(())
 }
