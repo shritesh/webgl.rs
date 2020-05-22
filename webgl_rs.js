@@ -209,6 +209,12 @@ export function triangle() {
     wasm.triangle();
 }
 
+/**
+*/
+export function twist() {
+    wasm.twist();
+}
+
 function handleError(f) {
     return function () {
         try {

@@ -18,6 +18,9 @@ export function square(): void;
 /**
 */
 export function triangle(): void;
+/**
+*/
+export function twist(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -29,6 +32,7 @@ export interface InitOutput {
   readonly sierpinski_points: () => void;
   readonly square: () => void;
   readonly triangle: () => void;
+  readonly twist: () => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
