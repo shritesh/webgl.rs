@@ -2,6 +2,7 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function sierpinski(): void;
+export function sierpinski_points(): void;
 export function square(): void;
 export function triangle(): void;
 export function __wbindgen_malloc(a: number): number;

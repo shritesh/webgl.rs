@@ -5,6 +5,9 @@
 export function sierpinski(): void;
 /**
 */
+export function sierpinski_points(): void;
+/**
+*/
 export function square(): void;
 /**
 */
@@ -15,6 +18,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly sierpinski: () => void;
+  readonly sierpinski_points: () => void;
   readonly square: () => void;
   readonly triangle: () => void;
   readonly __wbindgen_malloc: (a: number) => number;
