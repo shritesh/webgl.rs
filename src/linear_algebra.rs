@@ -14,6 +14,10 @@ impl Vec2 {
 
         f32array
     }
+
+    pub fn mix(&self, rhs: &Vec2, scale: f32) -> Vec2 {
+        *self * scale + *rhs * (1.0 - scale)
+    }
 }
 
 impl Add for Vec2 {

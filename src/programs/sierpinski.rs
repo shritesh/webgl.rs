@@ -1,9 +1,8 @@
-use crate::{linarg::Vec2, utils};
-use rand::prelude::*;
+use crate::{linear_algebra::Vec2, utils};
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;
 
-const NUM_POINTS: usize = 10_000;
+const SUBDIVISIONS: usize = 5;
 
 pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     let vert_shader = utils::compile_shader(
@@ -36,20 +35,15 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
 
     let vertices = [Vec2(-1.0, -1.0), Vec2(0.0, 1.0), Vec2(1.0, -1.0)];
 
-    let u = (vertices[0] + vertices[1]) * 0.5;
-    let v = (vertices[0] + vertices[2]) * 0.5;
+    let mut points = vec![];
 
-    let mut p = (u + v) * 0.5;
-    let mut points = vec![p];
-
-    let mut rng = rand::thread_rng();
-
-    for i in 0..NUM_POINTS {
-        let vertex = vertices.choose(&mut rng).unwrap();
-        p = points[i] + *vertex;
-        p = p * 0.5;
-        points.push(p);
-    }
+    divide_triangle(
+        &mut points,
+        &vertices[0],
+        &vertices[1],
+        &vertices[2],
+        SUBDIVISIONS,
+    );
 
     let buffer = context.create_buffer().ok_or("failed to create buffer")?;
     context.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
@@ -77,7 +71,23 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
 
     context.clear_color(1.0, 1.0, 1.0, 1.0);
     context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
-    context.draw_arrays(WebGlRenderingContext::POINTS, 0, points.len() as i32);
+    context.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, points.len() as i32);
 
     Ok(())
+}
+
+fn divide_triangle(points: &mut Vec<Vec2>, a: &Vec2, b: &Vec2, c: &Vec2, count: usize) {
+    if count == 0 {
+        points.push(*a);
+        points.push(*b);
+        points.push(*c);
+    } else {
+        let ab = a.mix(b, 0.5);
+        let ac = a.mix(c, 0.5);
+        let bc = b.mix(c, 0.5);
+
+        divide_triangle(points, a, &ab, &ac, count - 1);
+        divide_triangle(points, b, &bc, &ab, count - 1);
+        divide_triangle(points, c, &ac, &bc, count - 1);
+    }
 }

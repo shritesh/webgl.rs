@@ -1,4 +1,4 @@
-use crate::linarg::Vec2;
+use crate::linear_algebra::Vec2;
 use crate::utils;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;

@@ -1,6 +1,9 @@
 use crate::{linear_algebra::Vec2, utils};
+use rand::prelude::*;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;
+
+const NUM_POINTS: usize = 10_000;
 
 pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     let vert_shader = utils::compile_shader(
@@ -10,6 +13,7 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
         attribute vec4 vPosition;
 
         void main() {
+            gl_PointSize = 1.0;
             gl_Position = vPosition;
         }
         "#,
@@ -30,14 +34,29 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     let program = utils::link_program(&context, &vert_shader, &frag_shader)?;
     context.use_program(Some(&program));
 
-    let vertices = [Vec2(0.0, 1.0), Vec2(-1.0, -1.0), Vec2(1.0, -1.0)];
+    let vertices = [Vec2(-1.0, -1.0), Vec2(0.0, 1.0), Vec2(1.0, -1.0)];
+
+    let u = (vertices[0] + vertices[1]) * 0.5;
+    let v = (vertices[0] + vertices[2]) * 0.5;
+
+    let mut p = (u + v) * 0.5;
+    let mut points = vec![p];
+
+    let mut rng = rand::thread_rng();
+
+    for i in 0..NUM_POINTS {
+        let vertex = vertices.choose(&mut rng).unwrap();
+        p = points[i] + *vertex;
+        p = p * 0.5;
+        points.push(p);
+    }
 
     let buffer = context.create_buffer().ok_or("failed to create buffer")?;
     context.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
 
     context.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
-        &Vec2::flatten(&vertices),
+        &Vec2::flatten(&points),
         WebGlRenderingContext::STATIC_DRAW,
     );
 
@@ -58,7 +77,7 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
 
     context.clear_color(1.0, 1.0, 1.0, 1.0);
     context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
-    context.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, vertices.len() as i32);
+    context.draw_arrays(WebGlRenderingContext::POINTS, 0, points.len() as i32);
 
     Ok(())
 }
