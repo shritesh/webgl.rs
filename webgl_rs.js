@@ -181,6 +181,18 @@ export function sierpinski() {
 
 /**
 */
+export function sierpinski_3d() {
+    wasm.sierpinski_3d();
+}
+
+/**
+*/
+export function sierpinski_3d_points() {
+    wasm.sierpinski_3d_points();
+}
+
+/**
+*/
 export function sierpinski_points() {
     wasm.sierpinski_points();
 }
@@ -366,6 +378,9 @@ async function init(input) {
     };
     imports.wbg.__wbg_drawArrays_3d959ddd6dc5aa6d = function(arg0, arg1, arg2, arg3) {
         getObject(arg0).drawArrays(arg1 >>> 0, arg2, arg3);
+    };
+    imports.wbg.__wbg_enable_24e0ca734ee94d76 = function(arg0, arg1) {
+        getObject(arg0).enable(arg1 >>> 0);
     };
     imports.wbg.__wbg_enableVertexAttribArray_2e2bfba7f3a5fb74 = function(arg0, arg1) {
         getObject(arg0).enableVertexAttribArray(arg1 >>> 0);

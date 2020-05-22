@@ -2,6 +2,8 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function sierpinski(): void;
+export function sierpinski_3d(): void;
+export function sierpinski_3d_points(): void;
 export function sierpinski_points(): void;
 export function square(): void;
 export function triangle(): void;
