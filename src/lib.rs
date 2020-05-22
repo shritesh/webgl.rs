@@ -56,3 +56,8 @@ pub fn square() -> Result<(), JsValue> {
 pub fn triangle() -> Result<(), JsValue> {
     programs::triangle::run(get_context()?)
 }
+
+#[wasm_bindgen]
+pub fn twist() -> Result<(), JsValue> {
+    programs::twist::run(get_context()?)
+}

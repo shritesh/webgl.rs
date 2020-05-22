@@ -4,3 +4,4 @@ pub mod sierpinski_3d_points;
 pub mod sierpinski_points;
 pub mod square;
 pub mod triangle;
+pub mod twist;
