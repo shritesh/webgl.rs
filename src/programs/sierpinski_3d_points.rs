@@ -3,7 +3,7 @@ use rand::prelude::*;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;
 
-const NUM_POINTS: usize = 10_000;
+const NUM_POINTS: usize = 500_000;
 
 const VERTEX_SHADER_SRC: &'static str = r#"
 attribute vec4 vPosition;
@@ -42,10 +42,10 @@ pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     context.use_program(Some(&program));
 
     let vertices = [
-        Vec3(-0.5, -0.5, -0.5),
-        Vec3(0.5, -0.5, -0.5),
-        Vec3(0.0, 0.5, 0.0),
-        Vec3(0.0, -0.5, 0.5),
+        Vec3(0.0000, 0.0000, -1.0000),
+        Vec3(0.0000, 0.9428, 0.3333),
+        Vec3(-0.8165, -0.4714, 0.3333),
+        Vec3(0.8165, -0.4714, 0.3333),
     ];
 
     let mut points = vec![Vec3(0.0, 0.0, 0.0)];

@@ -3,7 +3,7 @@ use rand::prelude::*;
 use wasm_bindgen::prelude::*;
 use web_sys::WebGlRenderingContext;
 
-const NUM_POINTS: usize = 10_000;
+const NUM_POINTS: usize = 100_000;
 
 pub fn run(context: WebGlRenderingContext) -> Result<(), JsValue> {
     let vert_shader = utils::compile_shader(
