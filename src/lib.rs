@@ -33,9 +33,15 @@ pub fn sierpinski() -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
+pub fn sierpinski_3d() -> Result<(), JsValue> {
+    programs::sierpinski_3d::run(get_context()?)
+}
+
+#[wasm_bindgen]
 pub fn sierpinski_3d_points() -> Result<(), JsValue> {
     programs::sierpinski_3d_points::run(get_context()?)
 }
+
 #[wasm_bindgen]
 pub fn sierpinski_points() -> Result<(), JsValue> {
     programs::sierpinski_points::run(get_context()?)
