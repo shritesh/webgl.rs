@@ -1,3 +1,4 @@
+pub mod rotating_square;
 pub mod sierpinski;
 pub mod sierpinski_3d;
 pub mod sierpinski_3d_points;

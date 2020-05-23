@@ -28,6 +28,11 @@ fn get_context() -> Result<WebGlRenderingContext, JsValue> {
 }
 
 #[wasm_bindgen]
+pub fn rotating_square() -> Result<(), JsValue> {
+    programs::rotating_square::run(get_context()?)
+}
+
+#[wasm_bindgen]
 pub fn sierpinski() -> Result<(), JsValue> {
     programs::sierpinski::run(get_context()?)
 }

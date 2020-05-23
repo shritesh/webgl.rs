@@ -1,3 +1,6 @@
+use std::{cell::RefCell, rc::Rc};
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use web_sys::{WebGlProgram, WebGlRenderingContext, WebGlShader};
 
 pub fn set_panic_hook() {
@@ -60,4 +63,24 @@ pub fn link_program(
             .get_program_info_log(&program)
             .unwrap_or_else(|| String::from("Unknown error creating program object")))
     }
+}
+
+pub fn render_loop<F>(mut closure: F)
+where
+    F: 'static + FnMut(),
+{
+    let f = Rc::new(RefCell::new(None));
+    let g = f.clone();
+    *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+        closure();
+        request_animation_frame(f.borrow().as_ref().unwrap());
+    }) as Box<dyn FnMut()>));
+    request_animation_frame(g.borrow().as_ref().unwrap());
+}
+
+fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+    web_sys::window()
+        .unwrap()
+        .request_animation_frame(f.as_ref().unchecked_ref())
+        .expect("should register `requestAnimationFrame` OK");
 }
