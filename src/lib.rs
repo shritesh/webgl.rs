@@ -26,9 +26,40 @@ fn get_context() -> Result<WebGlRenderingContext, JsValue> {
 
     Ok(context)
 }
+
 #[wasm_bindgen]
-pub fn pixels() -> Result<(), JsValue> {
-    programs::pixels::run(get_context()?)
+pub fn square() -> Result<(), JsValue> {
+    programs::square::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn triangle() -> Result<(), JsValue> {
+    programs::triangle::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn sierpinski_points() -> Result<(), JsValue> {
+    programs::sierpinski_points::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn sierpinski() -> Result<(), JsValue> {
+    programs::sierpinski::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn sierpinski_3d_points() -> Result<(), JsValue> {
+    programs::sierpinski_3d_points::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn sierpinski_3d() -> Result<(), JsValue> {
+    programs::sierpinski_3d::run(get_context()?)
+}
+
+#[wasm_bindgen]
+pub fn twist() -> Result<(), JsValue> {
+    programs::twist::run(get_context()?)
 }
 
 #[wasm_bindgen]
@@ -42,36 +73,6 @@ pub fn rotating_square_controls() -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn sierpinski() -> Result<(), JsValue> {
-    programs::sierpinski::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn sierpinski_3d() -> Result<(), JsValue> {
-    programs::sierpinski_3d::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn sierpinski_3d_points() -> Result<(), JsValue> {
-    programs::sierpinski_3d_points::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn sierpinski_points() -> Result<(), JsValue> {
-    programs::sierpinski_points::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn square() -> Result<(), JsValue> {
-    programs::square::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn triangle() -> Result<(), JsValue> {
-    programs::triangle::run(get_context()?)
-}
-
-#[wasm_bindgen]
-pub fn twist() -> Result<(), JsValue> {
-    programs::twist::run(get_context()?)
+pub fn pixels() -> Result<(), JsValue> {
+    programs::pixels::run(get_context()?)
 }
