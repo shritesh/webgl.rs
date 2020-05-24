@@ -78,9 +78,39 @@ where
     request_animation_frame(g.borrow().as_ref().unwrap());
 }
 
+pub fn render_loop_with_delay<F>(mut closure: F, delay: Rc<RefCell<i32>>)
+where
+    F: 'static + FnMut(),
+{
+    let f = Rc::new(RefCell::new(None));
+    let g = f.clone();
+    *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+        closure();
+        let h = f.clone();
+        set_timeout(
+            move || {
+                request_animation_frame(h.borrow().as_ref().unwrap());
+            },
+            *delay.borrow(),
+        );
+    }) as Box<dyn FnMut()>));
+    request_animation_frame(g.borrow().as_ref().unwrap());
+}
 fn request_animation_frame(f: &Closure<dyn FnMut()>) {
     web_sys::window()
         .unwrap()
         .request_animation_frame(f.as_ref().unchecked_ref())
         .expect("should register `requestAnimationFrame` OK");
+}
+
+fn set_timeout<F>(closure: F, timeout: i32)
+where
+    F: 'static + FnMut(),
+{
+    let f = Closure::wrap(Box::new(closure) as Box<dyn FnMut()>);
+    web_sys::window()
+        .unwrap()
+        .set_timeout_with_callback_and_timeout_and_arguments_0(f.as_ref().unchecked_ref(), timeout)
+        .unwrap();
+    f.forget();
 }

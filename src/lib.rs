@@ -33,6 +33,11 @@ pub fn rotating_square() -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
+pub fn rotating_square_controls() -> Result<(), JsValue> {
+    programs::rotating_square_controls::run(get_context()?)
+}
+
+#[wasm_bindgen]
 pub fn sierpinski() -> Result<(), JsValue> {
     programs::sierpinski::run(get_context()?)
 }
