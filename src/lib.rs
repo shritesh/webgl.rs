@@ -26,6 +26,10 @@ fn get_context() -> Result<WebGlRenderingContext, JsValue> {
 
     Ok(context)
 }
+#[wasm_bindgen]
+pub fn pixels() -> Result<(), JsValue> {
+    programs::pixels::run(get_context()?)
+}
 
 #[wasm_bindgen]
 pub fn rotating_square() -> Result<(), JsValue> {

@@ -37,6 +37,7 @@ features = [
   'HtmlButtonElement',
   'HtmlCanvasElement',
   'HtmlInputElement',
+  'MouseEvent',
   'WebGlBuffer',
   'WebGlProgram',
   'WebGlRenderingContext',

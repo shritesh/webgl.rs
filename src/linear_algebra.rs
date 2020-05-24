@@ -4,6 +4,8 @@ use std::ops::{Add, Mul};
 pub struct Vec2(pub f32, pub f32);
 
 impl Vec2 {
+    pub const SIZE: i32 = 32 / 8 * 2;
+
     pub fn flatten(vectors: &[Vec2]) -> Float32Array {
         let f32array = Float32Array::new_with_length((vectors.len() * 2) as u32);
 
@@ -37,6 +39,7 @@ impl Mul<f32> for Vec2 {
 pub struct Vec3(pub f32, pub f32, pub f32);
 
 impl Vec3 {
+    pub const SIZE: i32 = 32 / 8 * 3;
     pub fn flatten(vectors: &[Vec3]) -> Float32Array {
         let f32array = Float32Array::new_with_length((vectors.len() * 3) as u32);
 
@@ -65,5 +68,46 @@ impl Mul<f32> for Vec3 {
     type Output = Vec3;
     fn mul(self, rhs: f32) -> Self::Output {
         Vec3(self.0 * rhs, self.1 * rhs, self.2 * rhs)
+    }
+}
+#[derive(Copy, Clone)]
+pub struct Vec4(pub f32, pub f32, pub f32, pub f32);
+
+impl Vec4 {
+    pub const SIZE: i32 = 32 / 8 * 4;
+    pub fn flatten(vectors: &[Vec4]) -> Float32Array {
+        let f32array = Float32Array::new_with_length((vectors.len() * 4) as u32);
+
+        for (idx, v) in vectors.into_iter().enumerate() {
+            f32array.set_index((idx * 4) as u32, v.0);
+            f32array.set_index((idx * 4 + 1) as u32, v.1);
+            f32array.set_index((idx * 4 + 2) as u32, v.2);
+            f32array.set_index((idx * 4 + 3) as u32, v.3);
+        }
+
+        f32array
+    }
+
+    pub fn mix(&self, rhs: &Vec4, scale: f32) -> Vec4 {
+        *self * scale + *rhs * (1.0 - scale)
+    }
+}
+
+impl Add for Vec4 {
+    type Output = Vec4;
+    fn add(self, rhs: Self) -> Self::Output {
+        Vec4(
+            self.0 + rhs.0,
+            self.1 + rhs.1,
+            self.2 + rhs.2,
+            self.3 + rhs.3,
+        )
+    }
+}
+
+impl Mul<f32> for Vec4 {
+    type Output = Vec4;
+    fn mul(self, rhs: f32) -> Self::Output {
+        Vec4(self.0 * rhs, self.1 * rhs, self.2 * rhs, self.3 * rhs)
     }
 }
