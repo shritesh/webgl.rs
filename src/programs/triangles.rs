@@ -1,45 +1,46 @@
-use crate::linear_algebra::{Vec2, Vec4};
-use crate::utils;
+use crate::{
+    linear_algebra::{Vec2, Vec3},
+    utils,
+};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::WebGlRenderingContext as Gl;
 
 const VERTEX_SHADER_SRC: &'static str = r#"
-attribute vec4 v_position;
-attribute vec4 v_color;
+attribute vec4 v_Position;
+attribute vec3 v_Color;
 
-varying vec4 f_color;
+varying vec4 f_Color;
 
 void main() {
-    gl_Position = v_position;
-    f_color = v_color;
-    gl_PointSize = 10.0;
+    gl_Position = v_Position;
+    f_Color = vec4(v_Color, 1.0);
 }
 "#;
 
 const FRAGMENT_SHADER_SRC: &'static str = r#"
 precision mediump float;
 
-varying vec4 f_color;
+varying vec4 f_Color;
 
 void main() {
-    gl_FragColor = f_color;
+    gl_FragColor = f_Color;
 }
 "#;
 
-const COLORS: [Vec4; 8] = [
-    Vec4(0.0, 0.0, 0.0, 1.0), // black
-    Vec4(1.0, 0.0, 0.0, 1.0), // red
-    Vec4(1.0, 1.0, 0.0, 1.0), // yellow
-    Vec4(0.0, 1.0, 0.0, 1.0), // green
-    Vec4(0.0, 0.0, 1.0, 1.0), // blue
-    Vec4(1.0, 0.0, 1.0, 1.0), // magenta
-    Vec4(0.0, 1.0, 1.0, 1.0), // cyan
-    Vec4(1.0, 1.0, 1.0, 1.0), // white
-];
+const MAX_VERTICES: i32 = 200;
 
-const MAX_POINTS: i32 = 200;
+const COLORS: [Vec3; 8] = [
+    Vec3(0.0, 0.0, 0.0), // black
+    Vec3(1.0, 0.0, 0.0), // red
+    Vec3(1.0, 1.0, 0.0), // yellow
+    Vec3(0.0, 1.0, 0.0), // green
+    Vec3(0.0, 0.0, 1.0), // blue
+    Vec3(1.0, 0.0, 1.0), // magenta
+    Vec3(0.0, 1.0, 1.0), // cyan
+    Vec3(1.0, 1.0, 1.0), // white
+];
 
 pub fn run(context: Gl) -> Result<(), JsValue> {
     let canvas = context.canvas().unwrap();
@@ -53,11 +54,11 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
 
     let v_position_buffer = context
         .create_buffer()
-        .ok_or("failed to create v_position buffer")?;
+        .ok_or("failed to create v_Position buffer")?;
     context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_position_buffer));
-    context.buffer_data_with_i32(Gl::ARRAY_BUFFER, Vec2::SIZE * MAX_POINTS, Gl::STATIC_DRAW);
-    let v_position = match context.get_attrib_location(&program, "v_position") {
-        -1 => Err("unable to get location for v_position"),
+    context.buffer_data_with_i32(Gl::ARRAY_BUFFER, Vec2::SIZE * MAX_VERTICES, Gl::STATIC_DRAW);
+    let v_position = match context.get_attrib_location(&program, "v_Position") {
+        -1 => Err("unable to get location for v_Position"),
         p => Ok(p as u32),
     }?;
     context.vertex_attrib_pointer_with_i32(v_position, 2, Gl::FLOAT, false, 0, 0);
@@ -65,49 +66,30 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
 
     let v_color_buffer = context
         .create_buffer()
-        .ok_or("failed to create v_color buffer")?;
+        .ok_or("failed to create v_Color buffer")?;
     context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_color_buffer));
-    context.buffer_data_with_i32(Gl::ARRAY_BUFFER, Vec4::SIZE * MAX_POINTS, Gl::STATIC_DRAW);
-    let v_color = match context.get_attrib_location(&program, "v_color") {
-        -1 => Err("unable to get location for v_color"),
+    context.buffer_data_with_i32(Gl::ARRAY_BUFFER, Vec3::SIZE * MAX_VERTICES, Gl::STATIC_DRAW);
+    let v_color = match context.get_attrib_location(&program, "v_Color") {
+        -1 => Err("unable to get location for v_Color"),
         p => Ok(p as u32),
     }?;
-    context.vertex_attrib_pointer_with_i32(v_color, 4, Gl::FLOAT, false, 0, 0);
+    context.vertex_attrib_pointer_with_i32(v_color, 3, Gl::FLOAT, false, 0, 0);
     context.enable_vertex_attrib_array(v_color);
 
     context.clear_color(0.5, 0.5, 0.5, 1.0);
 
-    let points = Rc::new(RefCell::new(0));
-
-    let canvas = Rc::new(RefCell::new(canvas));
+    let vertices = Rc::new(RefCell::new(0));
     let context = Rc::new(RefCell::new(context));
-
-    let drawing = Rc::new(RefCell::new(false));
+    let canvas = Rc::new(RefCell::new(canvas));
     {
-        let drawing = drawing.clone();
-        utils::add_event_listener(&canvas.borrow(), "mouseup", move |_event| {
-            *drawing.borrow_mut() = false;
-        });
-    }
-    {
-        let drawing = drawing.clone();
-        utils::add_event_listener(&canvas.borrow(), "mousedown", move |_event| {
-            *drawing.borrow_mut() = true;
-        });
-    }
-    {
-        let points = points.clone();
-        let drawing = drawing.clone();
         let canvas_ref = canvas.clone();
         let context = context.clone();
-        utils::add_event_listener(&canvas.borrow(), "mousemove", move |event| {
+        let vertices = vertices.clone();
+        utils::add_event_listener(&canvas.borrow(), "mousedown", move |event| {
             let event = event.dyn_into::<web_sys::MouseEvent>().unwrap();
-            if !*drawing.borrow() {
-                return;
-            }
-            let context = context.borrow();
-            let mut points = points.borrow_mut();
             let canvas = canvas_ref.borrow();
+            let context = context.borrow();
+            let mut vertices = vertices.borrow_mut();
 
             context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_position_buffer));
             let t = Vec2(
@@ -117,26 +99,25 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
             );
             context.buffer_sub_data_with_i32_and_array_buffer_view(
                 Gl::ARRAY_BUFFER,
-                Vec2::SIZE * (*points % MAX_POINTS),
+                Vec2::SIZE * (*vertices % MAX_VERTICES),
                 &Vec2::flatten(&[t]),
             );
 
             context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_color_buffer));
             context.buffer_sub_data_with_i32_and_array_buffer_view(
                 Gl::ARRAY_BUFFER,
-                Vec4::SIZE * (*points % MAX_POINTS),
-                &Vec4::flatten(&[COLORS[(*points as usize % COLORS.len())]]),
+                Vec3::SIZE * (*vertices % MAX_VERTICES),
+                &Vec3::flatten(&[COLORS[(*vertices as usize % COLORS.len())]]),
             );
 
-            *points += 1;
+            *vertices += 1;
         });
     }
 
     utils::render_loop(move || {
         let context = context.borrow();
         context.clear(Gl::COLOR_BUFFER_BIT);
-        context.draw_arrays(Gl::POINTS, 0, points.borrow().min(MAX_POINTS));
+        context.draw_arrays(Gl::TRIANGLE_STRIP, 0, vertices.borrow().min(MAX_VERTICES));
     });
-
     Ok(())
 }

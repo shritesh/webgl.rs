@@ -10,3 +10,4 @@ pub mod twist;
 pub mod pixels;
 pub mod rotating_square;
 pub mod rotating_square_controls;
+pub mod triangles;

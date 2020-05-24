@@ -41,15 +41,15 @@ pub fn compile_shader(
 
 pub fn link_program(
     context: &WebGlRenderingContext,
-    vert_shader: &WebGlShader,
-    frag_shader: &WebGlShader,
+    vertex_shader: &WebGlShader,
+    fragment_shader: &WebGlShader,
 ) -> Result<WebGlProgram, String> {
     let program = context
         .create_program()
         .ok_or_else(|| String::from("Unable to create program object"))?;
 
-    context.attach_shader(&program, vert_shader);
-    context.attach_shader(&program, frag_shader);
+    context.attach_shader(&program, vertex_shader);
+    context.attach_shader(&program, fragment_shader);
     context.link_program(&program);
 
     if context

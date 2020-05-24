@@ -76,3 +76,8 @@ pub fn rotating_square_controls() -> Result<(), JsValue> {
 pub fn pixels() -> Result<(), JsValue> {
     programs::pixels::run(get_context()?)
 }
+
+#[wasm_bindgen]
+pub fn triangles() -> Result<(), JsValue> {
+    programs::triangles::run(get_context()?)
+}
