@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{WebGlProgram, WebGlRenderingContext, WebGlShader};
+use web_sys::{Event, EventTarget, WebGlProgram, WebGlRenderingContext, WebGlShader};
 
 pub fn set_panic_hook() {
     // When the `console_error_panic_hook` feature is enabled, we can call the
@@ -111,6 +111,17 @@ where
     web_sys::window()
         .unwrap()
         .set_timeout_with_callback_and_timeout_and_arguments_0(f.as_ref().unchecked_ref(), timeout)
+        .unwrap();
+    f.forget();
+}
+
+pub fn add_event_listener<F>(target: &EventTarget, event: &str, closure: F)
+where
+    F: 'static + FnMut(Event),
+{
+    let f = Closure::wrap(Box::new(closure) as Box<dyn FnMut(_)>);
+    target
+        .add_event_listener_with_callback(event, f.as_ref().unchecked_ref())
         .unwrap();
     f.forget();
 }

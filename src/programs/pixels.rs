@@ -83,37 +83,25 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
     let context = Rc::new(RefCell::new(context));
 
     let drawing = Rc::new(RefCell::new(false));
-    // MouseUp
     {
         let drawing = drawing.clone();
-        let canvas = canvas.clone();
-        let stop_drawing = Closure::wrap(Box::new(move |_event: web_sys::MouseEvent| {
+        utils::add_event_listener(&canvas.borrow(), "mouseup", move |_event| {
             *drawing.borrow_mut() = false;
-        }) as Box<dyn FnMut(_)>);
-        canvas
-            .borrow()
-            .set_onmouseup(Some(stop_drawing.as_ref().unchecked_ref()));
-        stop_drawing.forget();
+        });
     }
-    // MouseDown
     {
         let drawing = drawing.clone();
-        let canvas = canvas.clone();
-        let start_drawing = Closure::wrap(Box::new(move |_event: web_sys::MouseEvent| {
+        utils::add_event_listener(&canvas.borrow(), "mousedown", move |_event| {
             *drawing.borrow_mut() = true;
-        }) as Box<dyn FnMut(_)>);
-        canvas
-            .borrow()
-            .set_onmousedown(Some(start_drawing.as_ref().unchecked_ref()));
-        start_drawing.forget();
+        });
     }
-    // MouseMove
     {
-        let context = context.clone();
         let points = points.clone();
         let drawing = drawing.clone();
         let canvas_ref = canvas.clone();
-        let add_point = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
+        let context = context.clone();
+        utils::add_event_listener(&canvas.borrow(), "mousemove", move |event| {
+            let event = event.dyn_into::<web_sys::MouseEvent>().unwrap();
             if !*drawing.borrow() {
                 return;
             }
@@ -141,11 +129,7 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
             );
 
             *points += 1;
-        }) as Box<dyn FnMut(_)>);
-        canvas
-            .borrow()
-            .set_onmousemove(Some(add_point.as_ref().unchecked_ref()));
-        add_point.forget();
+        });
     }
 
     utils::render_loop(move || {

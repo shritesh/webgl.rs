@@ -73,25 +73,19 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
     let direction = Rc::new(RefCell::new(false));
     {
         let direction = direction.clone();
-        let toggle_direction = Closure::wrap(Box::new(move || {
+        utils::add_event_listener(&toggle_btn, "click", move |_event| {
             *direction.borrow_mut() ^= true;
-        }) as Box<dyn FnMut()>);
-        toggle_btn.set_onclick(Some(toggle_direction.as_ref().unchecked_ref()));
-        toggle_direction.forget();
+        });
     }
 
     let delay = Rc::new(RefCell::new(50));
+    let speed_slider = Rc::new(RefCell::new(speed_slider));
     {
-        let speed_slider = Rc::new(RefCell::new(speed_slider));
         let speed_slider_ref = speed_slider.clone();
         let delay = delay.clone();
-        let change_delay = Closure::wrap(Box::new(move |_event: web_sys::Event| {
-            *delay.borrow_mut() = 100 - speed_slider_ref.borrow().value().parse::<i32>().unwrap();
-        }) as Box<dyn FnMut(_)>);
-        speed_slider
-            .borrow()
-            .set_oninput(Some(change_delay.as_ref().unchecked_ref()));
-        change_delay.forget();
+        utils::add_event_listener(&speed_slider.borrow(), "input", move |_event| {
+            *delay.borrow_mut() = 100 - &speed_slider_ref.borrow().value().parse::<i32>().unwrap();
+        })
     }
 
     let mut theta = 0.0f32;
