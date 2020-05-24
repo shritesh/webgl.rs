@@ -30,6 +30,9 @@ export function rotating_square_controls(): void;
 /**
 */
 export function pixels(): void;
+/**
+*/
+export function triangles(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -45,6 +48,7 @@ export interface InitOutput {
   readonly rotating_square: () => void;
   readonly rotating_square_controls: () => void;
   readonly pixels: () => void;
+  readonly triangles: () => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;

@@ -11,6 +11,7 @@ export function twist(): void;
 export function rotating_square(): void;
 export function rotating_square_controls(): void;
 export function pixels(): void;
+export function triangles(): void;
 export function __wbindgen_malloc(a: number): number;
 export function __wbindgen_realloc(a: number, b: number, c: number): number;
 export const __wbindgen_export_2: WebAssembly.Table;

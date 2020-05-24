@@ -261,6 +261,12 @@ export function pixels() {
     wasm.pixels();
 }
 
+/**
+*/
+export function triangles() {
+    wasm.triangles();
+}
+
 function handleError(f) {
     return function () {
         try {
@@ -606,12 +612,12 @@ async function init(input) {
     imports.wbg.__wbindgen_rethrow = function(arg0) {
         throw takeObject(arg0);
     };
-    imports.wbg.__wbindgen_closure_wrapper216 = function(arg0, arg1, arg2) {
-        var ret = makeMutClosure(arg0, arg1, 46, __wbg_adapter_22);
+    imports.wbg.__wbindgen_closure_wrapper130 = function(arg0, arg1, arg2) {
+        var ret = makeMutClosure(arg0, arg1, 55, __wbg_adapter_22);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper218 = function(arg0, arg1, arg2) {
-        var ret = makeMutClosure(arg0, arg1, 44, __wbg_adapter_25);
+    imports.wbg.__wbindgen_closure_wrapper132 = function(arg0, arg1, arg2) {
+        var ret = makeMutClosure(arg0, arg1, 53, __wbg_adapter_25);
         return addHeapObject(ret);
     };
 
