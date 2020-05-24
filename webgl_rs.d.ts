@@ -5,6 +5,9 @@
 export function rotating_square(): void;
 /**
 */
+export function rotating_square_controls(): void;
+/**
+*/
 export function sierpinski(): void;
 /**
 */
@@ -30,6 +33,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly rotating_square: () => void;
+  readonly rotating_square_controls: () => void;
   readonly sierpinski: () => void;
   readonly sierpinski_3d: () => void;
   readonly sierpinski_3d_points: () => void;
@@ -40,7 +44,8 @@ export interface InitOutput {
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;
-  readonly _dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hab8cae2f24029681: (a: number, b: number) => void;
+  readonly _dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hf30d24bc6e4d79f7: (a: number, b: number) => void;
+  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h08cbd6570b4b9519: (a: number, b: number, c: number) => void;
   readonly __wbindgen_free: (a: number, b: number) => void;
   readonly __wbindgen_exn_store: (a: number) => void;
 }
