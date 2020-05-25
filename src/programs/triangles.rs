@@ -79,34 +79,36 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
     context.clear_color(0.5, 0.5, 0.5, 1.0);
 
     let vertices = Rc::new(RefCell::new(0));
-    let context = Rc::new(RefCell::new(context));
-    let canvas = Rc::new(RefCell::new(canvas));
+    let context = Rc::new(context);
+    let canvas = Rc::new(canvas);
     {
         let canvas_ref = canvas.clone();
         let context = context.clone();
         let vertices = vertices.clone();
-        utils::add_event_listener(&canvas.borrow(), "mousedown", move |event| {
+        utils::add_event_listener(&canvas, "mousedown", move |event| {
             let event = event.dyn_into::<web_sys::MouseEvent>().unwrap();
-            let canvas = canvas_ref.borrow();
-            let context = context.borrow();
             let mut vertices = vertices.borrow_mut();
+
+            if *vertices == MAX_VERTICES {
+                return;
+            }
 
             context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_position_buffer));
             let t = Vec2(
-                -1.0 + (2.0 * event.offset_x() as f32) / canvas.width() as f32,
-                -1.0 + (2.0 * (canvas.height() as f32 - event.offset_y() as f32))
-                    / canvas.height() as f32,
+                -1.0 + (2.0 * event.offset_x() as f32) / canvas_ref.width() as f32,
+                -1.0 + (2.0 * (canvas_ref.height() as f32 - event.offset_y() as f32))
+                    / canvas_ref.height() as f32,
             );
             context.buffer_sub_data_with_i32_and_array_buffer_view(
                 Gl::ARRAY_BUFFER,
-                Vec2::SIZE * (*vertices % MAX_VERTICES),
+                Vec2::SIZE * *vertices,
                 &Vec2::flatten(&[t]),
             );
 
             context.bind_buffer(Gl::ARRAY_BUFFER, Some(&v_color_buffer));
             context.buffer_sub_data_with_i32_and_array_buffer_view(
                 Gl::ARRAY_BUFFER,
-                Vec3::SIZE * (*vertices % MAX_VERTICES),
+                Vec3::SIZE * *vertices,
                 &Vec3::flatten(&[COLORS[(*vertices as usize % COLORS.len())]]),
             );
 
@@ -115,7 +117,6 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
     }
 
     utils::render_loop(move || {
-        let context = context.borrow();
         context.clear(Gl::COLOR_BUFFER_BIT);
         context.draw_arrays(Gl::TRIANGLE_STRIP, 0, vertices.borrow().min(MAX_VERTICES));
     });

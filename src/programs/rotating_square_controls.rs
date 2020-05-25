@@ -79,12 +79,12 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
     }
 
     let delay = Rc::new(RefCell::new(50));
-    let speed_slider = Rc::new(RefCell::new(speed_slider));
+    let speed_slider = Rc::new(speed_slider);
     {
         let speed_slider_ref = speed_slider.clone();
         let delay = delay.clone();
-        utils::add_event_listener(&speed_slider.borrow(), "input", move |_event| {
-            *delay.borrow_mut() = 100 - &speed_slider_ref.borrow().value().parse::<i32>().unwrap();
+        utils::add_event_listener(&speed_slider, "input", move |_event| {
+            *delay.borrow_mut() = 100 - &speed_slider_ref.value().parse::<i32>().unwrap();
         })
     }
 
