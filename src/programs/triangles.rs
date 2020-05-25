@@ -15,6 +15,7 @@ varying vec4 f_Color;
 
 void main() {
     gl_Position = v_Position;
+    gl_PointSize = 5.0;
     f_Color = vec4(v_Color, 1.0);
 }
 "#;
@@ -118,7 +119,13 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
 
     utils::render_loop(move || {
         context.clear(Gl::COLOR_BUFFER_BIT);
-        context.draw_arrays(Gl::TRIANGLE_STRIP, 0, *vertices.borrow());
+
+        match *vertices.borrow() {
+            0 => {}
+            1 => context.draw_arrays(Gl::POINTS, 0, 1),
+            2 => context.draw_arrays(Gl::LINES, 0, 2),
+            vertices => context.draw_arrays(Gl::TRIANGLE_STRIP, 0, vertices),
+        };
     });
     Ok(())
 }
