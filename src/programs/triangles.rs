@@ -118,7 +118,7 @@ pub fn run(context: Gl) -> Result<(), JsValue> {
 
     utils::render_loop(move || {
         context.clear(Gl::COLOR_BUFFER_BIT);
-        context.draw_arrays(Gl::TRIANGLE_STRIP, 0, vertices.borrow().min(MAX_VERTICES));
+        context.draw_arrays(Gl::TRIANGLE_STRIP, 0, *vertices.borrow());
     });
     Ok(())
 }
