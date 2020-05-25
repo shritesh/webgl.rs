@@ -81,3 +81,8 @@ pub fn pixels() -> Result<(), JsValue> {
 pub fn triangles() -> Result<(), JsValue> {
     programs::triangles::run(get_context()?)
 }
+
+#[wasm_bindgen]
+pub fn cad() -> Result<(), JsValue> {
+    programs::cad::run(get_context()?)
+}
